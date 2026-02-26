@@ -5,15 +5,12 @@ services:
     image: postgres:16
     container_name: app_db
     restart: unless-stopped
-
     environment:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: app
       POSTGRES_DB: app
-
     ports:
       - "5432:5432"
-
     volumes:
       - db_data:/var/lib/postgresql/data
 
@@ -21,31 +18,36 @@ services:
     build: ./server
     container_name: app_server
     restart: unless-stopped
-
     environment:
       DATABASE_URL: postgres://app:app@db:5432/app
       PORT: 4000
-
     ports:
       - "4000:4000"
-
     depends_on:
       - db
 
   pgadmin:
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:latest
     container_name: app_pgadmin
     restart: unless-stopped
-
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
 
+      # Optional niceties for dev:
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+
     ports:
       - "5050:80"
-
     depends_on:
       - db
+    volumes:
+      # Persist pgAdmin settings (recommended)
+      - pgadmin_data:/var/lib/pgadmin
+
+      # Auto-register servers from a JSON file
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
 
 volumes:
   db_data:
+  pgadmin_data:

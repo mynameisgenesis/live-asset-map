@@ -9,3 +9,16 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+
+  server:
+    build: ./server
+    environment:
+      DATABASE_URL: postgres://app:app@db:5432/app
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:

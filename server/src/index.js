@@ -1,7 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-import { initDb, pool } from "./db";
-import { typeDefs, makeResolvers } from "./schema";
+import { initDb, pool } from "./db.js";
+import { typeDefs, makeResolvers } from "./schema.js";
 
 await initDb();
 
